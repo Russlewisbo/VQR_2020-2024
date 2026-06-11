@@ -32,7 +32,7 @@ Data were extracted in two ways:
 ## Data extraction caveats
 
 - **R1 data for Area 05** includes only 5 of the 7 departments. BCA and DNS are excluded because they had fewer than 10 expected products from tenured staff — an ANVUR reporting threshold, not a data gap.
-- All R1 values were initially missing from the CSV and were manually added from pages 11–12 of the ANVUR PDF during the analysis. The values should be cross-checked against the original source if exact reproducibility is critical.
+- All R1 values were added from pages 11–12 of the ANVUR PDF during the analysis. The values should be cross-checked against the original source.
 :::
 
 ## Indicator Definitions
