@@ -214,9 +214,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>ANVUR evaluates departments using three families of indicators:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 28%">
-<col style="width: 30%">
-<col style="width: 41%">
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -279,9 +279,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="structure-of-this-report" class="level2">
 <h2 class="anchored" data-anchor-id="structure-of-this-report">Structure of This Report</h2>
 <ul>
-<li><strong><a href="./methods.html">Data &amp; Methods</a></strong>: Data sources, extraction procedures, and reproducibility notes.</li>
-<li><strong><a href="./results.html">Results</a></strong>: All key figures with interpretation and critical commentary.</li>
-<li><strong><a href="./about.html">About</a></strong>: Code availability and contact information.</li>
+<li><a href="./methods.html"><strong>Data &amp; Methods</strong></a>: Data sources, extraction procedures, and reproducibility notes.</li>
+<li><a href="./results.html"><strong>Results</strong></a>: All key figures with interpretation and critical commentary.</li>
+<li><a href="./about.html"><strong>About</strong></a>: Code availability and contact information.</li>
 </ul>
 <p>All analysis code is available <a href="https://github.com/Russlewisbo/VQR_2020-2024">on GitHub</a> and embedded in this report (click “Code” buttons to expand).</p>
 
@@ -760,8 +760,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>ANVUR evaluates departments using three families of indicators:</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Indicator <span class="pp">|</span> Definition <span class="pp">|</span> Interpretation <span class="pp">|</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------|------------|----------------|</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **R** (quality) <span class="pp">|</span> Ratio of a department's average evaluation score to the national area average <span class="pp">|</span> R &gt; 1 means above-average quality <span class="pp">|</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="pp">|----|----|----|</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **R** (quality) <span class="pp">|</span> Ratio of a department's average evaluation score to the national area average <span class="pp">|</span> R <span class="sc">\&gt;</span> 1 means above-average quality <span class="pp">|</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **H** (size-weight) <span class="pp">|</span> Fraction of expected products contributed by the department <span class="pp">|</span> Reflects the department's share of evaluated output <span class="pp">|</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **IRD** (composite) <span class="pp">|</span> Product of H × R <span class="pp">|</span> Captures both quality and quantity — rewards large departments with high quality <span class="pp">|</span></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
@@ -771,7 +771,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**R2**: Newly recruited / promoted staff (*neo-assunti / avanzamenti di carriera*)</span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**R1_2**: All evaluated staff combined</span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## Why does this matter?</span></span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>VQR results directly influence the allocation of research funding (Fondo di Finanziamento Ordinario, FFO) to Italian universities, and are used internally for departmental benchmarking and strategic planning. A department's VQR performance has concrete financial and reputational consequences.</span>
@@ -779,7 +779,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">## Executive Summary</span></span>
 <span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>::: {.finding-box}</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>::: finding-box</span>
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>**DMM demonstrates strong research quality but is penalised by size in the composite IRD ranking.**</span>
 <span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>DMM ranks **1st out of 32 departments** for R1 quality (1.26) — the best among all Padova departments for tenured-staff research quality.</span>
@@ -790,9 +790,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Structure of This Report</span></span>
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**[Data &amp; Methods](methods.qmd)**: Data sources, extraction procedures, and reproducibility notes.</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**[Results](results.qmd)**: All key figures with interpretation and critical commentary.</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**[About](about.qmd)**: Code availability and contact information.</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">**Data &amp; Methods**</span><span class="co">](methods.qmd)</span>: Data sources, extraction procedures, and reproducibility notes.</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">**Results**</span><span class="co">](results.qmd)</span>: All key figures with interpretation and critical commentary.</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">**About**</span><span class="co">](about.qmd)</span>: Code availability and contact information.</span>
 <span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>All analysis code is available <span class="co">[</span><span class="ot">on GitHub</span><span class="co">](https://github.com/Russlewisbo/VQR_2020-2024)</span> and embedded in this report (click "Code" buttons to expand).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
