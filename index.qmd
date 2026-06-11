@@ -1,0 +1,53 @@
+---
+title: "VQR 2020–2024: Performance of the Department of Molecular Medicine (DMM)"
+subtitle: "An independent, reproducible analysis of ANVUR evaluation results for the Università degli Studi di Padova"
+date: 2026-06-11
+date-format: "D MMMM YYYY"
+---
+
+## Background
+
+The **Valutazione della Qualità della Ricerca (VQR) 2020–2024** is the Italian national research quality assessment exercise conducted by [ANVUR](https://www.anvur.it/attivita/vqr/vqr-2020-2024/) (Agenzia Nazionale di Valutazione del Sistema Universitario e della Ricerca). It evaluates the quality of research outputs produced by Italian universities and research institutions over a five-year period.
+
+Results were published on 28 May 2026. This report provides a transparent, reproducible analysis of how the **Department of Molecular Medicine (DMM)** at the **Università degli Studi di Padova** performed relative to peer departments within the university and nationally.
+
+### What does the VQR measure?
+
+ANVUR evaluates departments using three families of indicators:
+
+| Indicator | Definition | Interpretation |
+|-----------|------------|----------------|
+| **R** (quality) | Ratio of a department's average evaluation score to the national area average | R > 1 means above-average quality |
+| **H** (size-weight) | Fraction of expected products contributed by the department | Reflects the department's share of evaluated output |
+| **IRD** (composite) | Product of H × R | Captures both quality and quantity — rewards large departments with high quality |
+
+These are computed separately for three personnel categories:
+
+- **R1**: Tenured staff (*personale a tempo indeterminato*)
+- **R2**: Newly recruited / promoted staff (*neo-assunti / avanzamenti di carriera*)
+- **R1_2**: All evaluated staff combined
+
+::: {.callout-note}
+## Why does this matter?
+
+VQR results directly influence the allocation of research funding (Fondo di Finanziamento Ordinario, FFO) to Italian universities, and are used internally for departmental benchmarking and strategic planning. A department's VQR performance has concrete financial and reputational consequences.
+:::
+
+## Executive Summary
+
+::: {.finding-box}
+**DMM demonstrates strong research quality but is penalised by size in the composite IRD ranking.**
+
+- DMM ranks **1st out of 32 departments** for R1 quality (1.26) — the best among all Padova departments for tenured-staff research quality.
+- For overall quality (R1_2 = 1.15), DMM ranks **4th out of 32** — solidly in the top tier.
+- However, because DMM is a relatively small department (157 expected products), its composite IRD1_2 (0.11) ranks only **21st out of 32**.
+- This reflects a structural property of the IRD indicator: it scales with department size, so even high-quality small departments receive low IRD scores.
+:::
+
+## Structure of This Report
+
+- **[Data & Methods](methods.qmd)**: Data sources, extraction procedures, and reproducibility notes.
+- **[Results](results.qmd)**: All key figures with interpretation and critical commentary.
+- **[About](about.qmd)**: Code availability and contact information.
+
+All analysis code is available [on GitHub](https://github.com/Russlewisbo/VQR_2020-2024) and embedded in this report (click "Code" buttons to expand).

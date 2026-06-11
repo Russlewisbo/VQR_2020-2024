@@ -1,0 +1,53 @@
+---
+title: "About"
+---
+
+## Purpose
+
+This website presents a transparent, reproducible analysis of the VQR 2020–2024 results for the Department of Molecular Medicine (DMM) at the Università degli Studi di Padova. It was created to facilitate informed discussion about the VQR indicators and their implications for departmental benchmarking.
+
+## Data Sources
+
+All data were extracted from official ANVUR documents:
+
+- **Institutional Report**: *Rapporto Istituzione — Università degli Studi di Padova*, VQR 2020–2024, published 28 May 2026.
+- **Final Report**: *Rapporto Finale ANVUR VQR 2020–2024*.
+
+Both are available from the [ANVUR VQR 2020–2024 results page](https://www.anvur.it/attivita/vqr/vqr-2020-2024/).
+
+## Code & Reproducibility
+
+All code is available on GitHub:
+
+::: {style="text-align: center; margin: 1.5em 0;"}
+[View on GitHub](https://github.com/Russlewisbo/VQR_2020-2024){.btn .btn-primary .btn-lg}
+:::
+
+The repository contains:
+
+| File | Description |
+|------|-------------|
+| `vqr_pipeline.R` | Standalone R pipeline that generates all figures |
+| `vqr_area_data.csv` | Area-level R indicators (Tables 2.1–2.3) |
+| `vqr_ird_data.csv` | Department-level H, R, IRD indicators (Table 2.4) |
+| `index.qmd`, `methods.qmd`, `results.qmd` | Quarto source for this website |
+
+To reproduce the figures locally:
+
+```r
+source("vqr_pipeline.R")
+```
+
+Or render the full website:
+
+```bash
+quarto render
+```
+
+## Disclaimer
+
+This analysis is an independent effort and is **not** an official publication of the Università degli Studi di Padova or of ANVUR. While every effort has been made to accurately extract and represent the published data, users should verify values against the original ANVUR documents for any formal or policy use.
+
+## Contact
+
+For questions or corrections, please [open an issue](https://github.com/Russlewisbo/VQR_2020-2024/issues) on the GitHub repository.

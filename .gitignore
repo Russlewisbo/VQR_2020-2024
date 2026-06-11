@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+.positai
+/.quarto/
+_freeze/
+
+**/*.quarto_ipynb

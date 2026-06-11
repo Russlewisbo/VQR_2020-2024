@@ -1,0 +1,97 @@
+---
+title: "Data & Methods"
+---
+
+## Data Sources
+
+All data were extracted from official ANVUR documents published on 28 May 2026:
+
+| Document | Content | Reference |
+|----------|---------|-----------|
+| *Rapporto Istituzione — Università degli Studi di Padova* | Institutional report with department-level indicators (Tables 2.1–2.4) | [ANVUR VQR 2020–2024 Results](https://www.anvur.it/attivita/vqr/vqr-2020-2024/) |
+| *Rapporto Finale ANVUR VQR 2020–2024* | National-level methodology and indicator definitions | [ANVUR Final Report](https://www.anvur.it/attivita/vqr/vqr-2020-2024/) |
+
+### What the ANVUR tables contain
+
+The Padova institutional report includes the following tables, which form the basis of this analysis:
+
+- **Table 2.1 (R1)**: Quality indicator for tenured staff, by department and disciplinary area (*area CUN*).
+- **Table 2.2 (R2)**: Quality indicator for newly recruited / promoted staff.
+- **Table 2.3 (R1_2)**: Quality indicator for all evaluated staff combined.
+- **Table 2.4**: Summary indicators (H, R, IRD) aggregated across disciplinary areas for all 32 departments.
+
+## Data Extraction
+
+Data were extracted in two ways:
+
+1. **Area-level indicators** (R1, R2, R1_2 by department within Areas 05 and 06): Manually transcribed from the PDF report into [`vqr_area_data.csv`](https://github.com/Russlewisbo/VQR_2020-2024/blob/main/vqr_area_data.csv). The pipeline script also includes a PDF parsing function (`parse_area_tables()`) using `pdftools` and regex, though the verified CSV is used by default.
+
+2. **Department-level indicators** (all 32 departments): Transcribed into [`vqr_ird_data.csv`](https://github.com/Russlewisbo/VQR_2020-2024/blob/main/vqr_ird_data.csv) from Table 2.4 of the institutional report.
+
+::: {.callout-warning}
+## Data extraction caveats
+
+- **R1 data for Area 05** includes only 5 of the 7 departments. BCA and DNS are excluded because they had fewer than 10 expected products from tenured staff — an ANVUR reporting threshold, not a data gap.
+- All R1 values were initially missing from the CSV and were manually added from pages 11–12 of the ANVUR PDF during the analysis. The values should be cross-checked against the original source if exact reproducibility is critical.
+:::
+
+## Indicator Definitions
+
+### Quality indicator R
+
+The R indicator for a department in a given area is:
+
+$$
+R = \frac{\bar{v}_{\text{dept}}}{\bar{v}_{\text{national}}}
+$$
+
+where $$\bar{v}$$ is the average evaluation score of submitted products. R > 1 means the department's average quality exceeds the national average for that area.
+
+### Size-weight indicator H
+
+$$
+H = \frac{n_{\text{dept}}}{N_{\text{institution}}}
+$$
+
+where $$n_{\text{dept}}$$ is the number of expected products from the department and $$N_{\text{institution}}$$ is the total across the institution. H reflects the department's relative contribution to the institution's evaluated output.
+
+### Composite indicator IRD
+
+$$
+IRD = H \times R
+$$
+
+This product means that IRD scales with both quality (R) and size (H). A small department with high R can still have a low IRD, because H is small. This is a deliberate design choice by ANVUR: IRD is intended to capture *total research impact*, not quality per capita.
+
+::: {.callout-important}
+## Critical note on IRD interpretation
+
+IRD is sometimes used in internal benchmarking as though it measures departmental "performance." This is misleading. A department with R = 1.26 (top quality) but only 157 expected products will always score lower on IRD than a department with R = 1.05 but 350 products. **IRD reflects departmental scale as much as — or more than — research quality.** This is explored in detail in the [Results](results.qmd#sec-ird-scatter).
+:::
+
+## Reproducibility
+
+The full analysis pipeline is contained in [`vqr_pipeline.R`](https://github.com/Russlewisbo/VQR_2020-2024/blob/main/vqr_pipeline.R). To reproduce all figures:
+```r
+source("vqr_pipeline.R")
+```
+
+The figures on the Results page are generated directly from the embedded R code in this Quarto document, using the same data files and plotting logic.
+
+### Software environment
+
+```{r}
+#| label: session-info
+#| code-fold: true
+#| code-summary: "Session info"
+sessionInfo()
+```
+
+### Required packages
+
+```{r}
+#| eval: false
+pkgs <- c("dplyr", "tidyr", "ggplot2", "patchwork",
+          "forcats", "scales", "ggrepel", "readr")
+install.packages(pkgs)
+```

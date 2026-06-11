@@ -1,0 +1,31 @@
+/* UniPD institutional red accent */
+:root {
+  --unipd-red: #9B0014;
+}
+
+.navbar {
+  border-bottom: 3px solid var(--unipd-red);
+}
+
+h1, h2, h3 {
+  color: #2c3e50;
+}
+
+/* Key findings boxes */
+.finding-box {
+  border-left: 4px solid var(--unipd-red);
+  background: #fdf2f2;
+  padding: 1em 1.2em;
+  margin: 1em 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.finding-box p:last-child {
+  margin-bottom: 0;
+}
+
+/* Figure captions */
+figcaption {
+  font-size: 0.9em;
+  color: #555;
+}

@@ -1,0 +1,356 @@
+---
+title: "Results"
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(patchwork)
+library(forcats)
+library(scales)
+library(ggrepel)
+library(readr)
+
+# --- Palette & formatting ---
+RED   <- c(R1 = "#9B0014", R2 = "#C0504D", R1_2 = "#E2A39E")
+GRAY  <- c(R1 = "#5A5A5A", R2 = "#9A9A9A", R1_2 = "#CCCCCC")
+INK   <- "#1A1A1A"; REF_LINE <- "#111111"
+it_num <- label_number(accuracy = 0.01, decimal.mark = ",")
+
+# --- Load data ---
+area_df <- read_delim("vqr_area_data.csv", delim = ";", show_col_types = FALSE)
+ird_df  <- read_delim("vqr_ird_data.csv", delim = ";", show_col_types = FALSE)
+
+# --- Short labels ---
+sigle <- c(
+  "BIOLOGIA (DiBio)" = "DiBio",
+  "BIOMEDICINA COMPARATA E ALIMENTAZIONE (BCA)" = "BCA",
+  "MEDICINA - DIMED" = "DIMED",
+  "MEDICINA MOLECOLARE - DMM" = "DMM",
+  "NEUROSCIENZE - DNS" = "DNS",
+  "SCIENZE BIOMEDICHE - DSB" = "DSB",
+  "SCIENZE DEL FARMACO - DSF" = "DSF",
+  "SALUTE DELLA DONNA E DEL BAMBINO - SDB" = "SDB",
+  "SCIENZE CARDIO- TORACO-VASCOLARI E SANITA' PUBBLICA" = "Cardio-Tor.",
+  "SCIENZE CHIRURGICHE ONCOLOGICHE E GASTROENTEROLOGICHE- DiSCOG" = "DiSCOG"
+)
+area_df <- area_df |>
+  mutate(
+    sigla = ifelse(dipartimento %in% names(sigle), sigle[dipartimento], dipartimento),
+    is_dmm = grepl("MOLECOLARE", dipartimento),
+    indicatore = factor(indicatore, levels = c("R1", "R2", "R1_2"))
+  )
+ird_df <- ird_df |> mutate(is_dmm = grepl("MOLECOLARE", dipartimento))
+```
+
+This page presents all key figures from the analysis of DMM's VQR 2020–2024 results. Each figure is generated from the embedded R code (click "Code" to expand). Source data: [ANVUR institutional report for the Università degli Studi di Padova](https://www.anvur.it/attivita/vqr/vqr-2020-2024/), Tables 2.1–2.4.
+
+## Area-Level Comparisons {#sec-area}
+
+DMM contributes evaluated products in two disciplinary areas: **Area 05 (Biology)** and **Area 06 (Medicine)**. The following figures compare DMM against other Padova departments active in each area, across all three R indicators.
+
+### Area 05 — Biology {#sec-area05}
+
+```{r}
+#| label: fig-area05
+#| fig-cap: "R indicators for Padova departments in Area 05 (Biology). DMM in red; peers in grey. Dashed line = national average (R = 1.0). BCA and DNS are excluded from R1 because they had < 10 expected products from tenured staff."
+#| fig-width: 11.5
+#| fig-height: 5.4
+
+plot_area <- function(area_code, titolo) {
+  d <- area_df |> filter(area == area_code)
+  ord <- d |> filter(indicatore == "R1_2") |> arrange(desc(R)) |> pull(sigla)
+  ord <- union(ord, unique(d$sigla))
+  d <- d |> mutate(
+    sigla = factor(sigla, levels = ord),
+    grp = paste0(ifelse(is_dmm, "DMM_", "ALT_"), indicatore)
+  )
+  pal <- c(
+    DMM_R1 = unname(RED["R1"]), DMM_R2 = unname(RED["R2"]),
+    DMM_R1_2 = unname(RED["R1_2"]),
+    ALT_R1 = unname(GRAY["R1"]), ALT_R2 = unname(GRAY["R2"]),
+    ALT_R1_2 = unname(GRAY["R1_2"])
+  )
+  ggplot(d, aes(sigla, R, group = indicatore, fill = grp)) +
+    geom_col(position = position_dodge(width = 0.8), width = 0.75) +
+    geom_hline(yintercept = 1, linetype = "dashed", color = REF_LINE) +
+    geom_text(aes(label = it_num(R)),
+              position = position_dodge(width = 0.8), vjust = -0.4, size = 2.6) +
+    scale_fill_manual(values = pal, guide = "none") +
+    labs(title = titolo, x = NULL,
+         y = "R indicator (> 1 = above national average)") +
+    theme_minimal(base_size = 12) +
+    theme(
+      panel.grid.major.x = element_blank(),
+      axis.text.x = element_text(
+        face = ifelse(levels(d$sigla) == "DMM", "bold", "plain")
+      )
+    )
+}
+plot_area("5", "Area 05 — Biology: DMM vs peer departments")
+```
+
+In Area 05, DMM's R1 (1.12) is above the national average, though not the highest among Padova biology departments — DIMED leads with 1.31 (albeit from a small base of only 10 products). DMM's R2 (1.12) and R1_2 (1.12) are consistent: above-average but mid-range within this peer group. DiBio, the largest biology department, outperforms on R2 (1.19) and R1_2 (1.15).
+
+### Area 06 — Medicine {#sec-area06}
+
+```{r}
+#| label: fig-area06
+#| fig-cap: "R indicators for Padova departments in Area 06 (Medicine). DMM in red; peers in grey. Dashed line = national average (R = 1.0)."
+#| fig-width: 11.5
+#| fig-height: 5.4
+plot_area("6", "Area 06 — Medicine: DMM vs peer departments")
+```
+
+In Area 06, DMM stands out more clearly. Its R1 of **1.45** is the highest among all Padova medicine departments — a substantial margin over the next-best (DSB at 1.25). R2 (1.11) and R1_2 (1.20) remain above average, though DSB surpasses DMM on these metrics (R2 = 1.37, R1_2 = 1.36). DMM's strength in Area 06 appears to be driven particularly by the quality of its tenured-staff research output.
+
+## University-Wide Rankings {#sec-rankings}
+
+### R1, R2, and R1_2 across all 32 departments {#sec-rank-panels}
+
+```{r}
+#| label: fig-rank-panels
+#| fig-cap: "All 32 Padova departments ranked by R1, R2, and R1_2 (aggregated across disciplinary areas, Table 2.4). DMM highlighted in red. Dashed line = national average (R = 1.0)."
+#| fig-width: 14
+#| fig-height: 7.5
+
+dmm_vals_rank <- ird_df |>
+  mutate(across(c(R1, R2, R1_2),
+                \(x) rank(desc(x), ties.method = "first"), .names = "rk_{.col}")) |>
+  filter(is_dmm) |>
+  select(R1, R2, R1_2, rk_R1, rk_R2, rk_R1_2)
+
+panel_labels_rank <- c(
+  R1 = paste0("R1 — tenured staff\nDMM: ",
+              it_num(dmm_vals_rank$R1), " — ",
+              dmm_vals_rank$rk_R1, "th of 32"),
+  R2 = paste0("R2 — newly recruited/promoted\nDMM: ",
+              it_num(dmm_vals_rank$R2), " — ",
+              dmm_vals_rank$rk_R2, "th of 32"),
+  R1_2 = paste0("R1_2 — all staff\nDMM: ",
+                it_num(dmm_vals_rank$R1_2), " — ",
+                dmm_vals_rank$rk_R1_2, "th of 32")
+)
+
+make_rank_panel <- function(col, color, strip_title) {
+  d <- ird_df |>
+    transmute(R = .data[[col]], is_dmm,
+              lbl_fct = fct_reorder(sigla, R),
+              fill = ifelse(is_dmm, color, "#B0B0B0"))
+  ggplot(d, aes(x = R, y = lbl_fct, fill = fill)) +
+    geom_col(width = 0.78) +
+    geom_text(
+      aes(x = -0.04, y = lbl_fct, label = as.character(lbl_fct),
+          color = is_dmm, fontface = ifelse(is_dmm, "bold", "plain")),
+      hjust = 1, size = 2.2) +
+    geom_text(aes(label = it_num(R)), hjust = -0.08, size = 2.0, color = INK) +
+    geom_vline(xintercept = 1, linetype = "dashed", color = REF_LINE, linewidth = 0.3) +
+    scale_fill_identity() +
+    scale_color_manual(values = c("FALSE" = "gray30", "TRUE" = "#9B0014"), guide = "none") +
+    scale_x_continuous(breaks = seq(0, 1.4, 0.2), limits = c(-0.05, 1.52),
+                       labels = function(x) ifelse(x < 0, "", it_num(x)),
+                       expand = expansion(mult = c(0, 0.02))) +
+    coord_cartesian(clip = "off") +
+    labs(title = strip_title, x = NULL, y = NULL) +
+    theme_minimal(base_size = 9.5) +
+    theme(
+      plot.title = element_text(color = "#9B0014", face = "bold",
+                                size = 8.5, lineheight = 1.2),
+      axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+      panel.grid.major.y = element_blank(), panel.grid.minor = element_blank(),
+      plot.margin = margin(t = 4, r = 8, b = 4, l = 55)
+    )
+}
+
+(
+  make_rank_panel("R1", unname(RED["R1"]), panel_labels_rank["R1"]) |
+  make_rank_panel("R2", unname(RED["R2"]), panel_labels_rank["R2"]) |
+  make_rank_panel("R1_2", unname(RED["R1_2"]), panel_labels_rank["R1_2"])
+) + plot_annotation(
+  title = "DMM position among Padova departments — R1, R2, R1_2",
+  caption = "Values from Table 2.4 (aggregated across areas)  ·  Dashed line = national average R = 1.0  ·  DMM in red",
+  theme = theme(
+    plot.title = element_text(color = "#9B0014", face = "bold", size = 13),
+    plot.caption = element_text(size = 7, color = "gray40")
+  )
+)
+```
+
+DMM's ranking varies substantially across the three indicators:
+
+| Indicator | DMM value | Rank (of 32) | Interpretation |
+|-----------|-----------|-------------|----------------|
+| R1 | 1.26 | 1st | Best tenured-staff quality in the university |
+| R2 | 1.11 | 6th | Above average for new recruits |
+| R1_2 | 1.15 | 4th | Top quartile overall |
+
+The gap between R1 (1.26) and R2 (1.11) suggests that DMM's tenured faculty produce higher-quality research than its more recently recruited staff — or alternatively, that newly recruited researchers have not yet had sufficient time to build a mature publication portfolio within the evaluation window.
+
+## IRD Rankings {#sec-ird}
+
+### IRD1_2 ranking with quality overlay {#sec-ird-rank}
+
+```{r}
+#| label: fig-ird-rank
+#| fig-cap: "All 32 departments ranked by IRD1_2. Bar colour encodes R1_2 quality (green = above average, red = below). DMM (bold red label, dark border) ranks 21st despite having R1_2 = 1.15."
+#| fig-width: 8.8
+#| fig-height: 8
+
+ird_sorted <- ird_df |> mutate(lbl_fct = fct_reorder(sigla, IRD1_2))
+
+ggplot(ird_sorted, aes(x = IRD1_2, y = lbl_fct)) +
+  geom_col(aes(fill = R1_2), width = 0.75, color = NA) +
+  geom_col(data = filter(ird_sorted, is_dmm),
+           aes(fill = R1_2), width = 0.75, color = "#1A1A1A", linewidth = 1.1) +
+  geom_text(
+    aes(x = -0.005, y = lbl_fct,
+        label = as.character(lbl_fct),
+        color = is_dmm,
+        fontface = ifelse(is_dmm, "bold", "plain")),
+    hjust = 1, size = 2.5
+  ) +
+  geom_text(aes(label = it_num(IRD1_2)), hjust = -0.15, size = 2.5, color = INK) +
+  scale_fill_gradientn(
+    colors = c("#B2182B", "#F4A582", "#FFFFBF", "#A6D96A", "#1A9850"),
+    values = rescale(c(0.90, 0.97, 1.00, 1.08, 1.20)),
+    name = "R1_2 (quality)",
+    breaks = c(0.95, 1.00, 1.05, 1.10, 1.15),
+    limits = c(0.90, 1.20)
+  ) +
+  scale_color_manual(values = c("FALSE" = "gray30", "TRUE" = "#9B0014"), guide = "none") +
+  scale_x_continuous(
+    limits = c(-0.008, 0.285),
+    labels = function(x) ifelse(x < 0, "", it_num(x)),
+    expand = expansion(mult = c(0, 0.04))
+  ) +
+  coord_cartesian(clip = "off") +
+  labs(
+    title = "Composite indicator (IRD): comparison across departments",
+    x = "IRD1_2 (quality × size composite indicator)",
+    y = NULL,
+    caption = "Source: ANVUR, VQR 2020–2024 — Università degli Studi di Padova, Table 2.4."
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    plot.title = element_text(color = "#9B0014", face = "bold", size = 13),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "right",
+    legend.key.height = unit(1.8, "cm"),
+    plot.caption = element_text(size = 6.5, color = "gray40"),
+    plot.margin = margin(t = 4, r = 8, b = 4, l = 55)
+  )
+```
+
+This figure reveals the central tension in the VQR results: DMM has one of the highest R1_2 values (green bar), yet ranks in the bottom third on IRD. This is because IRD = H × R, and H is proportional to department size. Departments like DFA (387 expected products) or FISPPA (352) achieve high IRD even with modest R values, simply because they are large.
+
+### IRD vs department size {#sec-ird-scatter}
+
+```{r}
+#| label: fig-ird-scatter
+#| fig-cap: "IRD1_2 vs department size (number of expected products). The dashed trend line shows that IRD increases approximately linearly with size. DMM (circled) has high quality (R1_2 = 1.15, rank 4/32) but low IRD (rank 21/32) due to its relatively small size."
+#| fig-width: 9.2
+#| fig-height: 5.6
+
+dmm_sc <- ird_df |>
+  mutate(rk_ird = rank(desc(IRD1_2), ties.method = "first"),
+         rk_r12 = rank(desc(R1_2), ties.method = "first")) |>
+  filter(is_dmm)
+
+ann_x_sc <- 195; ann_y_sc <- 0.082
+ann_lbl_sc <- paste0(
+  "DMM  (R1_2=", it_num(dmm_sc$R1_2), " \u00b7 ",
+  dmm_sc$rk_r12, "th for quality,\n",
+  dmm_sc$rk_ird, "th for IRD out of 32)"
+)
+
+ggplot(ird_df, aes(n_attesi, IRD1_2)) +
+  geom_smooth(method = "lm", se = FALSE,
+              linetype = "dashed", color = "#AAAAAA", linewidth = 0.8) +
+  annotate("text", x = 130, y = 0.248,
+           label = "Trend (IRD increases with size)",
+           hjust = 0, size = 2.8, color = "gray50", fontface = "italic") +
+  geom_point(aes(fill = R1_2), shape = 21, size = 4, color = "white") +
+  geom_point(data = filter(ird_df, is_dmm),
+             shape = 21, size = 6, color = "#9B0014", fill = NA, stroke = 1.5) +
+  annotate("segment",
+           x = ann_x_sc, xend = dmm_sc$n_attesi + 3,
+           y = ann_y_sc + 0.003, yend = dmm_sc$IRD1_2 - 0.002,
+           color = "#9B0014", linewidth = 0.6,
+           arrow = arrow(length = unit(5, "pt"), type = "closed")) +
+  annotate("label",
+           x = ann_x_sc, y = ann_y_sc,
+           label = ann_lbl_sc,
+           color = "#9B0014", fill = "white",
+           label.color = "#9B0014", label.size = 0.4,
+           size = 2.8, hjust = 0, vjust = 1, lineheight = 1.1) +
+  geom_text_repel(
+    data = filter(ird_df, sigla %in% c("DFA", "DII", "DSB", "DiBio", "BCA")),
+    aes(label = sigla), size = 2.8, color = INK,
+    nudge_y = 0.005, segment.color = "gray60", segment.size = 0.3,
+    min.segment.length = 0.2, box.padding = 0.3, point.padding = 0.2,
+    seed = 7481
+  ) +
+  scale_fill_gradientn(
+    colors = c("#B2182B", "#F4A582", "#FFFFBF", "#A6D96A", "#1A9850"),
+    values = rescale(c(0.90, 0.97, 1.00, 1.08, 1.20)),
+    name = "R1_2 (quality)",
+    breaks = c(0.95, 1.00, 1.05, 1.10, 1.15),
+    limits = c(0.90, 1.20)
+  ) +
+  labs(
+    title = "Why IRD depends on department size",
+    x = "Department size — expected products (\u2248 number of faculty)",
+    y = "IRD1_2 (composite indicator)",
+    caption = "Source: ANVUR, VQR 2020–2024 — Università degli Studi di Padova, Table 2.4."
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(color = "#9B0014", face = "bold", size = 13),
+    plot.caption = element_text(size = 6.5, color = "gray40"),
+    legend.key.height = unit(1.6, "cm")
+  )
+```
+
+The scatter plot makes the structural relationship explicit: IRD is almost entirely determined by department size, with quality (colour) providing only modest variation around the trend line. DMM sits well below the trend line for its size, but this is because it is a smaller department.
+
+::: {.callout-important}
+## Implications for benchmarking
+
+Using IRD as the sole or primary metric for internal benchmarking disadvantages small departments regardless of their research quality. DMM ranks 1st on R1 and 4th on R1_2 among all 32 Padova departments, yet 21st on IRD. If funding or prestige decisions rely heavily on IRD, high-quality small departments are structurally penalised.
+
+A fairer comparison would use R (quality per product) alongside IRD, or present IRD residuals after accounting for department size.
+:::
+
+## Summary
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary of DMM performance indicators across VQR 2020–2024."
+
+dmm_summary <- ird_df |>
+  mutate(across(c(R1, R2, R1_2, IRD1_2),
+                \(x) rank(desc(x), ties.method = "first"),
+                .names = "rank_{.col}")) |>
+  filter(is_dmm) |>
+  select(sigla, n_attesi, R1, rank_R1, R2, rank_R2, R1_2, rank_R1_2,
+         IRD1_2, rank_IRD1_2)
+
+tibble(
+  Metric = c("R1 (tenured staff quality)", "R2 (new recruit quality)",
+             "R1_2 (all staff quality)", "IRD1_2 (composite: quality × size)"),
+  Value = c(dmm_summary$R1, dmm_summary$R2, dmm_summary$R1_2, dmm_summary$IRD1_2),
+  `Rank (of 32)` = c(dmm_summary$rank_R1, dmm_summary$rank_R2,
+                     dmm_summary$rank_R1_2, dmm_summary$rank_IRD1_2),
+  Assessment = c("Highest in the university",
+                 "Top quintile",
+                 "Top quartile",
+                 "Bottom third — driven by small department size")
+) |> knitr::kable()
+```

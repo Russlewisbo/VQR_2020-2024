@@ -1,0 +1,44 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "VQR 2020–2024: DMM Performance Analysis"
+  repo-url: https://github.com/Russlewisbo/VQR_2020-2024
+  repo-actions: [source, issue]
+  navbar:
+    background: "#9B0014"
+    foreground: white
+    left:
+      - href: index.qmd
+        text: Overview
+      - href: methods.qmd
+        text: Data & Methods
+      - href: results.qmd
+        text: Results
+      - href: about.qmd
+        text: About
+    right:
+      - icon: github
+        href: https://github.com/Russlewisbo/VQR_2020-2024
+  page-footer:
+    center: |
+      Data source: [ANVUR, VQR 2020–2024](https://www.anvur.it/attivita/vqr/vqr-2020-2024/) — Risultati delle singole istituzioni: Università degli Studi di Padova (28 maggio 2026).
+    background: "#f8f9fa"
+
+format:
+  html:
+    theme:
+      light: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-tools: true
+    fig-responsive: true
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: auto
